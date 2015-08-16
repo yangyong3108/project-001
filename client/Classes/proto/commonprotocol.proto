@@ -1,0 +1,82 @@
+package card_protobuf;
+option optimize_for = SPEED;
+
+enum MessageType {
+	REQUEST = 0;
+	RESPONSE = 1;
+	PUSH = 2;
+}
+
+enum SubMessageType {
+	INIT = 0;
+	OPTION = 1;
+	LOGIN = 2;
+	POST = 3;
+	SET_PARAMETER = 4;
+	UPDATE = 5;
+	REGISTER = 6;
+	PAUSE = 7;
+	CANCEL = 8;
+	RESET = 9;
+	LOGOFF = 10;
+	REG_WD = 11;
+	CHAT = 12;
+	MARKET = 13;
+	NOTIFY = 14;
+}
+
+enum DataType {	
+	JSON = 0;   
+	BINARY = 1;  
+	MULTI_BINARY = 2;   
+	FIX = 3; 
+	HTML = 4; 
+	MULTI_BINARY_NAME = 5;
+	PROTOBUF = 6;
+	STRING = 7;
+	DYNA=8;
+	KLINE=9;
+	MIN=10;
+}
+
+message TopMessage {
+	optional string protocol_version = 1;
+	optional MessageType msg_type = 2;
+	optional SubMessageType sub_msg_type = 3;
+	optional string session_id = 4;
+	optional int64 seq = 5;
+	optional string radom = 6;
+	optional Pipeline pipeline = 7;
+	optional bytes data = 8;
+	optional string host = 9;
+	optional OrignalSource source = 10;
+    optional string user_name = 11;
+    optional int32 product_id = 12;
+    optional float version = 13;
+	optional int64 timeout = 14;
+	optional int64 timestamp = 15;
+}
+
+message Data{
+	optional string protocol_version = 1;
+	required DataType type = 2;
+	required bytes value= 3;
+	optional int64 length = 4;
+}
+
+message Pipeline{
+	required string pipe_index = 1;
+	optional bool end_flag = 2;
+}
+
+enum OrignalSource {
+	TERMINAL = 0;   
+	WEB = 1;
+    ANDRIOD_MOBILE = 2;
+	IOS_MOBILE = 3;
+	ANDRIOD_PAD = 4;
+	IOS_PAD = 5;
+	BLACKBERRY = 6;
+	WIN_MOBILE = 7;
+	WIN_PAD = 8;
+}

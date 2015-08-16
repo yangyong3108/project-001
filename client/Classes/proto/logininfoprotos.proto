@@ -1,0 +1,9 @@
+package card_protobuf;
+// LoginInfo protocol v1.0
+option optimize_for = SPEED;
+message LoginInfo{
+    required string username = 1;
+    required bytes password = 2;
+    required uint64 computerid = 3;
+    required float client_version = 4;
+}

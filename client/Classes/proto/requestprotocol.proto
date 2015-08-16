@@ -1,0 +1,16 @@
+package card_protobuf;
+import "commonprotocol.proto";
+// Request protocol v1.0
+
+option optimize_for = SPEED;
+
+message Request{
+	optional string package = 1;
+	optional string package_version = 2;
+	optional string function = 3;
+	optional string arg = 4;
+	optional int64 domId = 5;
+	optional bool no_cache = 6;
+	optional DataType type = 7;
+	optional string charset = 8;
+}
