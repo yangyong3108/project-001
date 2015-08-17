@@ -360,23 +360,21 @@ int TcpClient::requestLogin()
 //	return 0;
 //}
 
-int TcpClient::requestData(const int seq, const string& version, const string& package, const string& func, const string& arg)
+int TcpClient::requestData(const int nSeq, const int nMsgId, const string& arg, NetworkProxy *pData)
 {
 	TopMessage msgrep;
 	msgrep.set_protocol_version("1.0");
 	msgrep.set_msg_type(REQUEST);
 	msgrep.set_sub_msg_type(POST);
 	msgrep.set_session_id(G.m_strSessionID);
-	msgrep.set_seq(seq);
+	msgrep.set_seq(nSeq);
 	msgrep.set_host(m_strIP);
 	msgrep.set_user_name(G.m_strUserName);
 	msgrep.set_version((float)NT_VERSION);
 	
 	Request req;
 	req.set_domid(G.m_nDomID);
-	req.set_package_version(version);
-	req.set_package(package);
-	req.set_function(func);
+	req.set_msgid(nMsgId);
 	req.set_arg(arg);
 
 	int datalen = req.ByteSize();
@@ -384,10 +382,7 @@ int TcpClient::requestData(const int seq, const string& version, const string& p
 	autoptr_arr<char> arrguard1(buf);
 	if (!req.SerializeToArray(buf, datalen))
 	{
-		G.m_nStatus = STATUS_CLOSE;
-		//NT_STATUS("OnConnectError");
-
-		m_socket.close();
+		//closeAndReConn();
 		return 1;
 	}
 
@@ -400,35 +395,32 @@ int TcpClient::requestData(const int seq, const string& version, const string& p
 	autoptr_arr<char> arrguard(databuf);
 	if (!msgrep.SerializeToArray(databuf, datalen))
 	{
-		G.m_nStatus = STATUS_CLOSE;
-		//NT_STATUS("OnConnectError");
-
-		m_socket.close();
+		//closeAndReConn();
 		return 1;
 	}
 
-	char *tmpArr = new char[datalen+headlen];
-	autoptr_arr<char> arrguard2(tmpArr);
-	ZeroCopyOutputStream* raw_output = new ArrayOutputStream(tmpArr, datalen+headlen);
-	CodedOutputStream* coded_output = new CodedOutputStream(raw_output);
-	coded_output->WriteVarint32(datalen);
-	coded_output->WriteRaw(databuf, datalen);
-
-	if (!m_socket.send(tmpArr, datalen + headlen))
+	//char *tmpArr = new char[datalen+headlen];
+	//autoptr_arr<char> arrguard2(tmpArr);
+	
+	lock_guard<mutex> lg(m_writeMutex);
+	if (m_writeData.expand(datalen+headlen))
 	{
-		//·¢ËÍ´íÎó
-		G.m_nStatus = STATUS_CLOSE;
-		//NT_STATUS("OnConnectError");
+		ZeroCopyOutputStream* raw_output = new ArrayOutputStream(m_writeData.getBuf() + m_writeData.getPos(), datalen+headlen);
+		CodedOutputStream* coded_output = new CodedOutputStream(raw_output);
+		coded_output->WriteVarint32(datalen);
+		coded_output->WriteRaw(databuf, datalen);
+		m_writeData.setPos(m_writeData.getPos() + (datalen+headlen));
+
+		ReserveData *pReserveData = new ReserveData;
+		pReserveData->pNetworkProxy = pData;
+		pReserveData->nReqID = nMsgId;
+		G.m_mapReserveData.insert(map<int, ReserveData*>::value_type(nSeq, pReserveData));
+		G.m_setReqSource.insert(pData);
+		m_writeCv.notify_one();
 
 		delete coded_output;
-		delete raw_output;
-
-		m_socket.close();
-		return 1;
+		delete raw_output;	
 	}
-
-	delete coded_output;
-	delete raw_output;
 
 	return 0;
 }
@@ -506,7 +498,7 @@ void TcpClient::OnPackage(const char *buf, size_t len)
 										}
 										else if (pbrd.columninfo(j).name() == "username")
 										{
-											G.m_strUserName = columnValue.stringvalue();
+											// G.m_strUserName = columnValue.stringvalue();
 										}
 										else if (pbrd.columninfo(j).name() == "userid")
 										{

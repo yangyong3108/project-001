@@ -6,8 +6,12 @@
 #include "UserData.h"
 #include "ConstUtil.h"
 #include "TcpClient.h"
+#include "Global.h"
+#include "NetMessageNo.h"
 
 USING_NS_CC;
+
+extern CGlobal G;
 
 CardScene::CardScene(void)
 {
@@ -20,6 +24,7 @@ CardScene::CardScene(void)
 
 CardScene::~CardScene(void)
 {
+	G.m_setReqSource.erase(this);
 }
 
 Scene* CardScene::createScene()
@@ -78,6 +83,8 @@ bool CardScene::init()
 	shuffle();
 	deal();	
 
+	TcpClient::instance()->requestData(G.getSeq(), MSG_CARD, "", this);
+
 	return true;
 }
 
@@ -111,5 +118,43 @@ void CardScene::showCard()
 
 void CardScene::OnNetData(int nReqId, Response *pResponse)
 {
+	if (nReqId == MSG_CARD)
+	{
+		if (pResponse->response_code() == OK)
+		{			
+			for (int idx = 0; idx < pResponse->data_size(); idx++)
+			{
+				card_protobuf::Data crdata = pResponse->data(idx);
+				ProtobufResponseData pbrd;
 
+				if (idx == 0)
+				{
+					if(crdata.type() == PROTOBUF)
+					{
+						if (!pbrd.ParseFromString(crdata.value()))
+							continue;
+					}
+					else
+						continue;
+
+					for(int i = 0; i < pbrd.rowvalue_size(); i++)
+					{
+						RowValue rowValue = pbrd.rowvalue(i);
+						for(int j = 0; j < rowValue.columnvalue_size(); j++)
+						{
+							RowValue_ColumnValue columnValue = rowValue.columnvalue(j);
+							if (pbrd.columninfo(j).name() == "money")
+							{
+
+							}							
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+
+		}
+	}
 }

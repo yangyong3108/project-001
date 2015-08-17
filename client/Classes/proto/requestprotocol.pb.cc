@@ -34,10 +34,8 @@ void protobuf_AssignDesc_requestprotocol_2eproto() {
       "requestprotocol.proto");
   GOOGLE_CHECK(file != NULL);
   Request_descriptor_ = file->message_type(0);
-  static const int Request_offsets_[8] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, package_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, package_version_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, function_),
+  static const int Request_offsets_[6] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, msgid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, arg_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, domid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, no_cache_),
@@ -87,11 +85,10 @@ void protobuf_AddDesc_requestprotocol_2eproto() {
   ::card_protobuf::protobuf_AddDesc_commonprotocol_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025requestprotocol.proto\022\rcard_protobuf\032\024"
-    "commonprotocol.proto\"\253\001\n\007Request\022\017\n\007pack"
-    "age\030\001 \001(\t\022\027\n\017package_version\030\002 \001(\t\022\020\n\010fu"
-    "nction\030\003 \001(\t\022\013\n\003arg\030\004 \001(\t\022\r\n\005domId\030\005 \001(\003"
-    "\022\020\n\010no_cache\030\006 \001(\010\022%\n\004type\030\007 \001(\0162\027.card_"
-    "protobuf.DataType\022\017\n\007charset\030\010 \001(\tB\002H\001", 238);
+    "commonprotocol.proto\"~\n\007Request\022\r\n\005msgid"
+    "\030\001 \001(\005\022\013\n\003arg\030\002 \001(\t\022\r\n\005domId\030\003 \001(\003\022\020\n\010no"
+    "_cache\030\004 \001(\010\022%\n\004type\030\005 \001(\0162\027.card_protob"
+    "uf.DataType\022\017\n\007charset\030\006 \001(\tB\002H\001", 192);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "requestprotocol.proto", &protobuf_RegisterTypes);
   Request::default_instance_ = new Request();
@@ -109,9 +106,7 @@ struct StaticDescriptorInitializer_requestprotocol_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Request::kPackageFieldNumber;
-const int Request::kPackageVersionFieldNumber;
-const int Request::kFunctionFieldNumber;
+const int Request::kMsgidFieldNumber;
 const int Request::kArgFieldNumber;
 const int Request::kDomIdFieldNumber;
 const int Request::kNoCacheFieldNumber;
@@ -138,9 +133,7 @@ Request::Request(const Request& from)
 void Request::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  package_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  package_version_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  function_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  msgid_ = 0;
   arg_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   domid_ = GOOGLE_LONGLONG(0);
   no_cache_ = false;
@@ -155,15 +148,6 @@ Request::~Request() {
 }
 
 void Request::SharedDtor() {
-  if (package_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete package_;
-  }
-  if (package_version_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete package_version_;
-  }
-  if (function_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete function_;
-  }
   if (arg_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete arg_;
   }
@@ -206,28 +190,14 @@ void Request::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 255) {
-    ZR_(domid_, type_);
-    if (has_package()) {
-      if (package_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        package_->clear();
-      }
-    }
-    if (has_package_version()) {
-      if (package_version_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        package_version_->clear();
-      }
-    }
-    if (has_function()) {
-      if (function_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        function_->clear();
-      }
-    }
+  if (_has_bits_[0 / 32] & 63) {
+    ZR_(msgid_, domid_);
     if (has_arg()) {
       if (arg_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         arg_->clear();
       }
     }
+    type_ = 0;
     if (has_charset()) {
       if (charset_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         charset_->clear();
@@ -252,59 +222,23 @@ bool Request::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string package = 1;
+      // optional int32 msgid = 1;
       case 1: {
-        if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_package()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->package().data(), this->package().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "package");
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &msgid_)));
+          set_has_msgid();
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_package_version;
+        if (input->ExpectTag(18)) goto parse_arg;
         break;
       }
 
-      // optional string package_version = 2;
+      // optional string arg = 2;
       case 2: {
         if (tag == 18) {
-         parse_package_version:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_package_version()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->package_version().data(), this->package_version().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "package_version");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_function;
-        break;
-      }
-
-      // optional string function = 3;
-      case 3: {
-        if (tag == 26) {
-         parse_function:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_function()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->function().data(), this->function().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "function");
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_arg;
-        break;
-      }
-
-      // optional string arg = 4;
-      case 4: {
-        if (tag == 34) {
          parse_arg:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_arg()));
@@ -315,13 +249,13 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(40)) goto parse_domId;
+        if (input->ExpectTag(24)) goto parse_domId;
         break;
       }
 
-      // optional int64 domId = 5;
-      case 5: {
-        if (tag == 40) {
+      // optional int64 domId = 3;
+      case 3: {
+        if (tag == 24) {
          parse_domId:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
@@ -330,13 +264,13 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(48)) goto parse_no_cache;
+        if (input->ExpectTag(32)) goto parse_no_cache;
         break;
       }
 
-      // optional bool no_cache = 6;
-      case 6: {
-        if (tag == 48) {
+      // optional bool no_cache = 4;
+      case 4: {
+        if (tag == 32) {
          parse_no_cache:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
@@ -345,13 +279,13 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(56)) goto parse_type;
+        if (input->ExpectTag(40)) goto parse_type;
         break;
       }
 
-      // optional .card_protobuf.DataType type = 7;
-      case 7: {
-        if (tag == 56) {
+      // optional .card_protobuf.DataType type = 5;
+      case 5: {
+        if (tag == 40) {
          parse_type:
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
@@ -360,18 +294,18 @@ bool Request::MergePartialFromCodedStream(
           if (::card_protobuf::DataType_IsValid(value)) {
             set_type(static_cast< ::card_protobuf::DataType >(value));
           } else {
-            mutable_unknown_fields()->AddVarint(7, value);
+            mutable_unknown_fields()->AddVarint(5, value);
           }
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(66)) goto parse_charset;
+        if (input->ExpectTag(50)) goto parse_charset;
         break;
       }
 
-      // optional string charset = 8;
-      case 8: {
-        if (tag == 66) {
+      // optional string charset = 6;
+      case 6: {
+        if (tag == 50) {
          parse_charset:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_charset()));
@@ -411,70 +345,45 @@ failure:
 void Request::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:card_protobuf.Request)
-  // optional string package = 1;
-  if (has_package()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->package().data(), this->package().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "package");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->package(), output);
+  // optional int32 msgid = 1;
+  if (has_msgid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->msgid(), output);
   }
 
-  // optional string package_version = 2;
-  if (has_package_version()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->package_version().data(), this->package_version().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "package_version");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      2, this->package_version(), output);
-  }
-
-  // optional string function = 3;
-  if (has_function()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->function().data(), this->function().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "function");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      3, this->function(), output);
-  }
-
-  // optional string arg = 4;
+  // optional string arg = 2;
   if (has_arg()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->arg().data(), this->arg().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
       "arg");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      4, this->arg(), output);
+      2, this->arg(), output);
   }
 
-  // optional int64 domId = 5;
+  // optional int64 domId = 3;
   if (has_domid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(5, this->domid(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->domid(), output);
   }
 
-  // optional bool no_cache = 6;
+  // optional bool no_cache = 4;
   if (has_no_cache()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->no_cache(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->no_cache(), output);
   }
 
-  // optional .card_protobuf.DataType type = 7;
+  // optional .card_protobuf.DataType type = 5;
   if (has_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      7, this->type(), output);
+      5, this->type(), output);
   }
 
-  // optional string charset = 8;
+  // optional string charset = 6;
   if (has_charset()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->charset().data(), this->charset().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
       "charset");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      8, this->charset(), output);
+      6, this->charset(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -487,40 +396,12 @@ void Request::SerializeWithCachedSizes(
 ::google::protobuf::uint8* Request::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:card_protobuf.Request)
-  // optional string package = 1;
-  if (has_package()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->package().data(), this->package().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "package");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->package(), target);
+  // optional int32 msgid = 1;
+  if (has_msgid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->msgid(), target);
   }
 
-  // optional string package_version = 2;
-  if (has_package_version()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->package_version().data(), this->package_version().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "package_version");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->package_version(), target);
-  }
-
-  // optional string function = 3;
-  if (has_function()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->function().data(), this->function().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "function");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->function(), target);
-  }
-
-  // optional string arg = 4;
+  // optional string arg = 2;
   if (has_arg()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->arg().data(), this->arg().length(),
@@ -528,26 +409,26 @@ void Request::SerializeWithCachedSizes(
       "arg");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        4, this->arg(), target);
+        2, this->arg(), target);
   }
 
-  // optional int64 domId = 5;
+  // optional int64 domId = 3;
   if (has_domid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(5, this->domid(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(3, this->domid(), target);
   }
 
-  // optional bool no_cache = 6;
+  // optional bool no_cache = 4;
   if (has_no_cache()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->no_cache(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->no_cache(), target);
   }
 
-  // optional .card_protobuf.DataType type = 7;
+  // optional .card_protobuf.DataType type = 5;
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      7, this->type(), target);
+      5, this->type(), target);
   }
 
-  // optional string charset = 8;
+  // optional string charset = 6;
   if (has_charset()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->charset().data(), this->charset().length(),
@@ -555,7 +436,7 @@ void Request::SerializeWithCachedSizes(
       "charset");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        8, this->charset(), target);
+        6, this->charset(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -570,53 +451,39 @@ int Request::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string package = 1;
-    if (has_package()) {
+    // optional int32 msgid = 1;
+    if (has_msgid()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->package());
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->msgid());
     }
 
-    // optional string package_version = 2;
-    if (has_package_version()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->package_version());
-    }
-
-    // optional string function = 3;
-    if (has_function()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->function());
-    }
-
-    // optional string arg = 4;
+    // optional string arg = 2;
     if (has_arg()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->arg());
     }
 
-    // optional int64 domId = 5;
+    // optional int64 domId = 3;
     if (has_domid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int64Size(
           this->domid());
     }
 
-    // optional bool no_cache = 6;
+    // optional bool no_cache = 4;
     if (has_no_cache()) {
       total_size += 1 + 1;
     }
 
-    // optional .card_protobuf.DataType type = 7;
+    // optional .card_protobuf.DataType type = 5;
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
     }
 
-    // optional string charset = 8;
+    // optional string charset = 6;
     if (has_charset()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -650,14 +517,8 @@ void Request::MergeFrom(const ::google::protobuf::Message& from) {
 void Request::MergeFrom(const Request& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_package()) {
-      set_package(from.package());
-    }
-    if (from.has_package_version()) {
-      set_package_version(from.package_version());
-    }
-    if (from.has_function()) {
-      set_function(from.function());
+    if (from.has_msgid()) {
+      set_msgid(from.msgid());
     }
     if (from.has_arg()) {
       set_arg(from.arg());
@@ -697,9 +558,7 @@ bool Request::IsInitialized() const {
 
 void Request::Swap(Request* other) {
   if (other != this) {
-    std::swap(package_, other->package_);
-    std::swap(package_version_, other->package_version_);
-    std::swap(function_, other->function_);
+    std::swap(msgid_, other->msgid_);
     std::swap(arg_, other->arg_);
     std::swap(domid_, other->domid_);
     std::swap(no_cache_, other->no_cache_);

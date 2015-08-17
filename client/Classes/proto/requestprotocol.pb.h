@@ -91,46 +91,17 @@ class Request : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string package = 1;
-  inline bool has_package() const;
-  inline void clear_package();
-  static const int kPackageFieldNumber = 1;
-  inline const ::std::string& package() const;
-  inline void set_package(const ::std::string& value);
-  inline void set_package(const char* value);
-  inline void set_package(const char* value, size_t size);
-  inline ::std::string* mutable_package();
-  inline ::std::string* release_package();
-  inline void set_allocated_package(::std::string* package);
+  // optional int32 msgid = 1;
+  inline bool has_msgid() const;
+  inline void clear_msgid();
+  static const int kMsgidFieldNumber = 1;
+  inline ::google::protobuf::int32 msgid() const;
+  inline void set_msgid(::google::protobuf::int32 value);
 
-  // optional string package_version = 2;
-  inline bool has_package_version() const;
-  inline void clear_package_version();
-  static const int kPackageVersionFieldNumber = 2;
-  inline const ::std::string& package_version() const;
-  inline void set_package_version(const ::std::string& value);
-  inline void set_package_version(const char* value);
-  inline void set_package_version(const char* value, size_t size);
-  inline ::std::string* mutable_package_version();
-  inline ::std::string* release_package_version();
-  inline void set_allocated_package_version(::std::string* package_version);
-
-  // optional string function = 3;
-  inline bool has_function() const;
-  inline void clear_function();
-  static const int kFunctionFieldNumber = 3;
-  inline const ::std::string& function() const;
-  inline void set_function(const ::std::string& value);
-  inline void set_function(const char* value);
-  inline void set_function(const char* value, size_t size);
-  inline ::std::string* mutable_function();
-  inline ::std::string* release_function();
-  inline void set_allocated_function(::std::string* function);
-
-  // optional string arg = 4;
+  // optional string arg = 2;
   inline bool has_arg() const;
   inline void clear_arg();
-  static const int kArgFieldNumber = 4;
+  static const int kArgFieldNumber = 2;
   inline const ::std::string& arg() const;
   inline void set_arg(const ::std::string& value);
   inline void set_arg(const char* value);
@@ -139,31 +110,31 @@ class Request : public ::google::protobuf::Message {
   inline ::std::string* release_arg();
   inline void set_allocated_arg(::std::string* arg);
 
-  // optional int64 domId = 5;
+  // optional int64 domId = 3;
   inline bool has_domid() const;
   inline void clear_domid();
-  static const int kDomIdFieldNumber = 5;
+  static const int kDomIdFieldNumber = 3;
   inline ::google::protobuf::int64 domid() const;
   inline void set_domid(::google::protobuf::int64 value);
 
-  // optional bool no_cache = 6;
+  // optional bool no_cache = 4;
   inline bool has_no_cache() const;
   inline void clear_no_cache();
-  static const int kNoCacheFieldNumber = 6;
+  static const int kNoCacheFieldNumber = 4;
   inline bool no_cache() const;
   inline void set_no_cache(bool value);
 
-  // optional .card_protobuf.DataType type = 7;
+  // optional .card_protobuf.DataType type = 5;
   inline bool has_type() const;
   inline void clear_type();
-  static const int kTypeFieldNumber = 7;
+  static const int kTypeFieldNumber = 5;
   inline ::card_protobuf::DataType type() const;
   inline void set_type(::card_protobuf::DataType value);
 
-  // optional string charset = 8;
+  // optional string charset = 6;
   inline bool has_charset() const;
   inline void clear_charset();
-  static const int kCharsetFieldNumber = 8;
+  static const int kCharsetFieldNumber = 6;
   inline const ::std::string& charset() const;
   inline void set_charset(const ::std::string& value);
   inline void set_charset(const char* value);
@@ -174,12 +145,8 @@ class Request : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:card_protobuf.Request)
  private:
-  inline void set_has_package();
-  inline void clear_has_package();
-  inline void set_has_package_version();
-  inline void clear_has_package_version();
-  inline void set_has_function();
-  inline void clear_has_function();
+  inline void set_has_msgid();
+  inline void clear_has_msgid();
   inline void set_has_arg();
   inline void clear_has_arg();
   inline void set_has_domid();
@@ -195,14 +162,12 @@ class Request : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::std::string* package_;
-  ::std::string* package_version_;
-  ::std::string* function_;
   ::std::string* arg_;
-  ::google::protobuf::int64 domid_;
+  ::google::protobuf::int32 msgid_;
   bool no_cache_;
-  int type_;
+  ::google::protobuf::int64 domid_;
   ::std::string* charset_;
+  int type_;
   friend void  protobuf_AddDesc_requestprotocol_2eproto();
   friend void protobuf_AssignDesc_requestprotocol_2eproto();
   friend void protobuf_ShutdownFile_requestprotocol_2eproto();
@@ -217,243 +182,39 @@ class Request : public ::google::protobuf::Message {
 
 // Request
 
-// optional string package = 1;
-inline bool Request::has_package() const {
+// optional int32 msgid = 1;
+inline bool Request::has_msgid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Request::set_has_package() {
+inline void Request::set_has_msgid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Request::clear_has_package() {
+inline void Request::clear_has_msgid() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Request::clear_package() {
-  if (package_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_->clear();
-  }
-  clear_has_package();
+inline void Request::clear_msgid() {
+  msgid_ = 0;
+  clear_has_msgid();
 }
-inline const ::std::string& Request::package() const {
-  // @@protoc_insertion_point(field_get:card_protobuf.Request.package)
-  return *package_;
+inline ::google::protobuf::int32 Request::msgid() const {
+  // @@protoc_insertion_point(field_get:card_protobuf.Request.msgid)
+  return msgid_;
 }
-inline void Request::set_package(const ::std::string& value) {
-  set_has_package();
-  if (package_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_ = new ::std::string;
-  }
-  package_->assign(value);
-  // @@protoc_insertion_point(field_set:card_protobuf.Request.package)
-}
-inline void Request::set_package(const char* value) {
-  set_has_package();
-  if (package_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_ = new ::std::string;
-  }
-  package_->assign(value);
-  // @@protoc_insertion_point(field_set_char:card_protobuf.Request.package)
-}
-inline void Request::set_package(const char* value, size_t size) {
-  set_has_package();
-  if (package_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_ = new ::std::string;
-  }
-  package_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:card_protobuf.Request.package)
-}
-inline ::std::string* Request::mutable_package() {
-  set_has_package();
-  if (package_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:card_protobuf.Request.package)
-  return package_;
-}
-inline ::std::string* Request::release_package() {
-  clear_has_package();
-  if (package_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = package_;
-    package_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void Request::set_allocated_package(::std::string* package) {
-  if (package_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete package_;
-  }
-  if (package) {
-    set_has_package();
-    package_ = package;
-  } else {
-    clear_has_package();
-    package_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:card_protobuf.Request.package)
+inline void Request::set_msgid(::google::protobuf::int32 value) {
+  set_has_msgid();
+  msgid_ = value;
+  // @@protoc_insertion_point(field_set:card_protobuf.Request.msgid)
 }
 
-// optional string package_version = 2;
-inline bool Request::has_package_version() const {
+// optional string arg = 2;
+inline bool Request::has_arg() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Request::set_has_package_version() {
+inline void Request::set_has_arg() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Request::clear_has_package_version() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Request::clear_package_version() {
-  if (package_version_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_version_->clear();
-  }
-  clear_has_package_version();
-}
-inline const ::std::string& Request::package_version() const {
-  // @@protoc_insertion_point(field_get:card_protobuf.Request.package_version)
-  return *package_version_;
-}
-inline void Request::set_package_version(const ::std::string& value) {
-  set_has_package_version();
-  if (package_version_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_version_ = new ::std::string;
-  }
-  package_version_->assign(value);
-  // @@protoc_insertion_point(field_set:card_protobuf.Request.package_version)
-}
-inline void Request::set_package_version(const char* value) {
-  set_has_package_version();
-  if (package_version_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_version_ = new ::std::string;
-  }
-  package_version_->assign(value);
-  // @@protoc_insertion_point(field_set_char:card_protobuf.Request.package_version)
-}
-inline void Request::set_package_version(const char* value, size_t size) {
-  set_has_package_version();
-  if (package_version_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_version_ = new ::std::string;
-  }
-  package_version_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:card_protobuf.Request.package_version)
-}
-inline ::std::string* Request::mutable_package_version() {
-  set_has_package_version();
-  if (package_version_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    package_version_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:card_protobuf.Request.package_version)
-  return package_version_;
-}
-inline ::std::string* Request::release_package_version() {
-  clear_has_package_version();
-  if (package_version_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = package_version_;
-    package_version_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void Request::set_allocated_package_version(::std::string* package_version) {
-  if (package_version_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete package_version_;
-  }
-  if (package_version) {
-    set_has_package_version();
-    package_version_ = package_version;
-  } else {
-    clear_has_package_version();
-    package_version_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:card_protobuf.Request.package_version)
-}
-
-// optional string function = 3;
-inline bool Request::has_function() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Request::set_has_function() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Request::clear_has_function() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void Request::clear_function() {
-  if (function_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    function_->clear();
-  }
-  clear_has_function();
-}
-inline const ::std::string& Request::function() const {
-  // @@protoc_insertion_point(field_get:card_protobuf.Request.function)
-  return *function_;
-}
-inline void Request::set_function(const ::std::string& value) {
-  set_has_function();
-  if (function_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    function_ = new ::std::string;
-  }
-  function_->assign(value);
-  // @@protoc_insertion_point(field_set:card_protobuf.Request.function)
-}
-inline void Request::set_function(const char* value) {
-  set_has_function();
-  if (function_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    function_ = new ::std::string;
-  }
-  function_->assign(value);
-  // @@protoc_insertion_point(field_set_char:card_protobuf.Request.function)
-}
-inline void Request::set_function(const char* value, size_t size) {
-  set_has_function();
-  if (function_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    function_ = new ::std::string;
-  }
-  function_->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:card_protobuf.Request.function)
-}
-inline ::std::string* Request::mutable_function() {
-  set_has_function();
-  if (function_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    function_ = new ::std::string;
-  }
-  // @@protoc_insertion_point(field_mutable:card_protobuf.Request.function)
-  return function_;
-}
-inline ::std::string* Request::release_function() {
-  clear_has_function();
-  if (function_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    return NULL;
-  } else {
-    ::std::string* temp = function_;
-    function_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-    return temp;
-  }
-}
-inline void Request::set_allocated_function(::std::string* function) {
-  if (function_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete function_;
-  }
-  if (function) {
-    set_has_function();
-    function_ = function;
-  } else {
-    clear_has_function();
-    function_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  }
-  // @@protoc_insertion_point(field_set_allocated:card_protobuf.Request.function)
-}
-
-// optional string arg = 4;
-inline bool Request::has_arg() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void Request::set_has_arg() {
-  _has_bits_[0] |= 0x00000008u;
-}
 inline void Request::clear_has_arg() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Request::clear_arg() {
   if (arg_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
@@ -521,15 +282,15 @@ inline void Request::set_allocated_arg(::std::string* arg) {
   // @@protoc_insertion_point(field_set_allocated:card_protobuf.Request.arg)
 }
 
-// optional int64 domId = 5;
+// optional int64 domId = 3;
 inline bool Request::has_domid() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void Request::set_has_domid() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void Request::clear_has_domid() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void Request::clear_domid() {
   domid_ = GOOGLE_LONGLONG(0);
@@ -545,15 +306,15 @@ inline void Request::set_domid(::google::protobuf::int64 value) {
   // @@protoc_insertion_point(field_set:card_protobuf.Request.domId)
 }
 
-// optional bool no_cache = 6;
+// optional bool no_cache = 4;
 inline bool Request::has_no_cache() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void Request::set_has_no_cache() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void Request::clear_has_no_cache() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void Request::clear_no_cache() {
   no_cache_ = false;
@@ -569,15 +330,15 @@ inline void Request::set_no_cache(bool value) {
   // @@protoc_insertion_point(field_set:card_protobuf.Request.no_cache)
 }
 
-// optional .card_protobuf.DataType type = 7;
+// optional .card_protobuf.DataType type = 5;
 inline bool Request::has_type() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void Request::set_has_type() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void Request::clear_has_type() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void Request::clear_type() {
   type_ = 0;
@@ -594,15 +355,15 @@ inline void Request::set_type(::card_protobuf::DataType value) {
   // @@protoc_insertion_point(field_set:card_protobuf.Request.type)
 }
 
-// optional string charset = 8;
+// optional string charset = 6;
 inline bool Request::has_charset() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void Request::set_has_charset() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void Request::clear_has_charset() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void Request::clear_charset() {
   if (charset_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {

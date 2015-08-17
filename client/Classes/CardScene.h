@@ -26,6 +26,7 @@ private:
 	std::vector<int>	m_vctCard;
 	std::vector<Player*> m_vctPlayer;
 	cocos2d::Sprite*				m_cardBack;
+	
 };
 
 

@@ -36,6 +36,8 @@ public:
         return false;
     }
 
+	virtual void update(float fDelta);
+
 	void starMenuCallback(Object* pSender);
 
 	void touchDown(Ref* pSender, Control::EventType type);

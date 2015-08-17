@@ -21,7 +21,7 @@ public:
 	ClientSocket* getSocket() { return &m_socket; }
 	int start();
 
-	int requestData(const int seq, const string& version, const string& package, const string& func, const string& arg);
+	int requestData(const int seq, const int nMsgId, const string& arg, NetworkProxy *pData);
 	int requestLogin();
 
 	void closeAndReConn();

@@ -158,3 +158,9 @@ void LoginScene::OnNetData(int nReqId, Response *pResponse)
 		}
 	}
 }
+
+//  不断监视G.status 查看状态
+void LoginScene::update(float fDelta)
+{
+
+}
