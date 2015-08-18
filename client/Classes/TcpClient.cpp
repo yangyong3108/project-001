@@ -524,15 +524,15 @@ void TcpClient::OnPackage(const char *buf, size_t len)
 				break;
 			case POST:
 				{
-					Response *pLoginResponse = new Response;
-					if (!pLoginResponse->ParseFromString(msg.data()))
+					Response *pResponse = new Response;
+					if (!pResponse->ParseFromString(msg.data()))
 					{
-						delete pLoginResponse;
+						delete pResponse;
 						return;
 					}
 					ResultNetData *pResultNetData = new ResultNetData;
 					pResultNetData->nSeq = seq;
-					pResultNetData->pResponse = pLoginResponse;
+					pResultNetData->pResponse = pResponse;
 					lock_guard<mutex> lg(G.m_netQueueMutex);
 					G.m_listNetQueue.push_back(pResultNetData);
 					G.m_nServerDate = msg.timestamp();

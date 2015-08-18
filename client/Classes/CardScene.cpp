@@ -143,10 +143,8 @@ void CardScene::OnNetData(int nReqId, Response *pResponse)
 						for(int j = 0; j < rowValue.columnvalue_size(); j++)
 						{
 							RowValue_ColumnValue columnValue = rowValue.columnvalue(j);
-							if (pbrd.columninfo(j).name() == "money")
-							{
-
-							}							
+							// 不需要传列的名称
+							m_vctPlayer[0]->addCard(columnValue.int32Value());
 						}
 					}
 				}
