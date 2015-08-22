@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "DataQueue.h"
+#include "redishelp"
 
 typedef struct
 {
@@ -17,6 +18,7 @@ typedef struct
 	int nUserId;
 	DataQueue read_dataqueue;
 	DataQueue write_dataqueue;
+	RedisHelp redisHelp;
 } conn;
 
 void conn_init();

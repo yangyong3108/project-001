@@ -94,12 +94,6 @@ int main(int argc, char **argv)
 		}
 	}
 
-	redis_context = redisConnect("127.0.0.1", 6379);
-	rediscontextguard rg(redis_context);
-	if (redis_context  != NULL && redis_context->err)
-	{
-		printf("Error: %s\n", redis_context->errstr);
-	}
 	struct sockaddr_in sin;
 	evutil_socket_t listener;
 	struct event *listener_event;

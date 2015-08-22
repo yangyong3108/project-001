@@ -2,7 +2,7 @@
 #define __GLOBAL__
 
 #include <pqxx/pqxx>
-#include <hiredis/hiredis.h>
+//#include <hiredis/hiredis.h>
 
 template<class T = char>
 class autoptr
@@ -35,13 +35,13 @@ class dbconnguard
 		pqxx::connection* m_conn;
 };
 
-class rediscontextguard
-{
-public:
-	rediscontextguard(redisContext* c) : m_context(c){}
-	~rediscontextguard() { redisFree(m_context); }
-private:
-	redisContext *m_context;
-};
+//class rediscontextguard
+//{
+//public:
+//	rediscontextguard(redisContext* c) : m_context(c){}
+//	~rediscontextguard() { redisFree(m_context); }
+//private:
+//	redisContext *m_context;
+//};
 
 #endif

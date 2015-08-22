@@ -19,8 +19,6 @@ using namespace google::protobuf::io;
 using namespace google::protobuf;
 using namespace card_protobuf;
 
-extern redisContext redis_context;
-
 static pthread_mutex_t conn_lock = PTHREAD_MUTEX_INITIALIZER;
 static int freecurr;
 static int freetotal;
@@ -48,24 +46,11 @@ conn* conn_new(const int sfd, enum conn_states init_state, const int event_flags
 			printf("Failed to allocate conn");
 			return NULL;
 		}
-	}
-	if (redis_context != NULL)
-	{
-		redisReply* reply = redisCommand(redis_context,"incr counter");
-		if (reply == NULL)
-		{
-			printf("ERROR: %s\n", redis_context->errstr);
-			if (redis_context->err == REDIS_ERR_EOF)
-			{
-				printf("server closed the connection,reconn\n");
-				
-			}
-		}
-		else
-		{
-	
-		}
-	}
+	}	
+
+	int nCurCount(0);
+	if (c->redisHelp.addServerCounter(nCurCount))
+		printf("cur count:%d\n", nCurCount);
 
 	c->nUserId = 0;
 	c->bAuth = false;
