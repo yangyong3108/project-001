@@ -1,0 +1,42 @@
+package card_protobuf;
+// Response protocol v1.0
+import "commonprotocol.proto";
+
+option optimize_for = SPEED;
+
+enum ResponseCode{
+    // 2xx
+    OK = 200;
+    ACCEPT = 202;
+    PARTIAL_CONTENT = 203;
+    SERVER_BUSY = 250;
+
+    // 4xx
+    BAD_REQUEST = 400;
+    UNAUTHORIZED = 401;
+    FORBIDDEN = 403;
+    NOT_FOUND = 404;
+    REQUEST_TIMEOUT = 408;
+    INTERVAL_TOO_SHORT = 440;
+
+    //6XX
+    OFF_LINE = 600;
+    SEND_ERROR = 601;
+
+    // 5XX
+    SERVER_INTERNAL_ERROR = 500;
+    NOT_IMPLEMENT = 501;
+    SERVICE_UNAVAILABLE = 503;
+    GATEWAY_TIMEOUT = 504;
+
+    // CUSTOMIZED CODE
+    UNSUPPORTED_VERSION = 997;
+    PROTOCOL_ERROR = 998;
+    UNKNOWN = 999;    
+}
+
+message Response{
+    required ResponseCode response_code=1;
+    optional string error_description=2;
+    repeated Data data=3;
+}
