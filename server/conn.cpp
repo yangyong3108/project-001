@@ -14,6 +14,7 @@
 #include <time.h>
 #include <errno.h>
 #include "json/json.h"
+#include <map>
 
 using namespace google::protobuf::io;
 using namespace google::protobuf;
@@ -22,8 +23,9 @@ using namespace card_protobuf;
 static pthread_mutex_t conn_lock = PTHREAD_MUTEX_INITIALIZER;
 static int freecurr;
 static int freetotal;
-
 static conn **freeconns;
+
+static map<int, user_data*> s_userdata;
 
 void conn_init()
 {
@@ -48,9 +50,11 @@ conn* conn_new(const int sfd, enum conn_states init_state, const int event_flags
 		}
 	}	
 
-	int nCurCount(0);
-	if (c->redisHelp.addServerCounter(nCurCount))
-		printf("cur count:%d\n", nCurCount);
+	c->redisHelp.connect();
+
+	//int nCurCount(0);
+	//if (c->redisHelp.addServerCounter(nCurCount))
+	//  printf("cur count:%d\n", nCurCount);
 
 	c->nUserId = 0;
 	c->bAuth = false;
@@ -94,14 +98,7 @@ void do_read(const int fd, const short which, void *arg)
 	ssize_t result = recv(fd, buff, sizeof(buff), 0);
 	if (result == 0) // client close
 	{
-		printf("client close\n");
-		event_del(&c->read_event);
-		event_del(&c->write_event);
-	//	event_free(&c->read_event);
-	//	event_free(&c->write_event);
-		if (conn_add_to_freelist(c))
-		  conn_free(c);
-
+		cleanconn(c);
 	}
 	else if (result < 0)
 	{
@@ -110,13 +107,7 @@ void do_read(const int fd, const short which, void *arg)
 			return;
 		}
 		perror("recv error");
-
-		// event_free(&c->read_event);
-		// event_free(&c->write_event);
-		event_del(&c->read_event);
-		event_del(&c->write_event);
-		if (conn_add_to_freelist(c))
-		  conn_free(c);
+		cleanconn(c);
 	}
 	else
 	{
@@ -168,6 +159,24 @@ void conn_free(conn *c)
 	{
 		free(c);
 	}
+}
+
+void cleanconn(conn *c)
+{
+	c->redisHelp.disconnect();
+	map<int, user_data*>::iterator it = s_userdata.find(c->nUserId);
+	if (it != s_userdata.end())
+	{
+		delete it->second;
+		s_userdata.erase(it);
+	}
+	printf("client close\n");
+	event_del(&c->read_event);
+	event_del(&c->write_event);
+	//	event_free(&c->read_event);
+	//	event_free(&c->write_event);
+	if (conn_add_to_freelist(c))
+	  conn_free(c);
 }
 
 bool process_data(DataQueue *dq, conn *c)
@@ -271,6 +280,9 @@ void parse_package(const char *buff, size_t len, conn *c)
 
 								c->bAuth = true;
 								c->nUserId = r[0][0].as<int>();
+								user_data *pUserData = new user_data;
+								pUserData->fd = c->sfd;
+								s_userdata.insert(map<int, user_data*>::value_type(c->nUserId, pUserData));
 								//msg.set_data(&rsp, rsp.ByteSize());
 								printf("auth success ready send data\n");								
 								ProtobufResponseData prData;
@@ -298,14 +310,14 @@ void parse_package(const char *buff, size_t len, conn *c)
 									printf("serialize error!\n");
 									return;
 								}
-								
+
 								Response rsp;
 								rsp.set_response_code(OK);
 								Data *loginData = rsp.add_data();
 								loginData->set_type(PROTOBUF);
 								loginData->set_value(szPrData, nPrDataSize);
 
-								
+
 								int nRspSize(rsp.ByteSize());
 								char *szRsp = new char[nRspSize];
 								autoptr_arr<char> guardRsp(szRsp);
@@ -342,7 +354,7 @@ void parse_package(const char *buff, size_t len, conn *c)
 								autoptr<CodedOutputStream> guardCodedOutput(code_output);
 								code_output->WriteVarint32(nDataSize);
 								code_output->WriteRaw(szData, nDataSize);
-								
+
 								c->write_dataqueue.push(szTemp, nDataSize + nHeadSize);
 								if (-1 == event_add(&c->write_event, NULL))
 								{
@@ -354,7 +366,7 @@ void parse_package(const char *buff, size_t len, conn *c)
 							{
 								Response rsp;
 								rsp.set_response_code(NOT_FOUND);
-								
+
 								int nRspSize(rsp.ByteSize());
 								char *szRsp = new char[nRspSize];
 								autoptr_arr<char> guardRsp(szRsp);
@@ -372,7 +384,7 @@ void parse_package(const char *buff, size_t len, conn *c)
 								time_t t;
 								time(&t);
 								msg.set_timestamp(t);
-							    msg.set_data(szRsp, nRspSize);
+								msg.set_data(szRsp, nRspSize);
 								int nDataSize(msg.ByteSize());
 								int nHeadSize(CodedOutputStream::VarintSize32(nDataSize));
 								char *szData = new char[nDataSize];
@@ -397,7 +409,7 @@ void parse_package(const char *buff, size_t len, conn *c)
 									return;
 								}
 							}
-							
+
 						}
 						break;
 				}
@@ -413,7 +425,7 @@ void do_write(const int fd, const short which, void *arg)
 	conn *c = (conn*)arg;
 	ssize_t result = send(fd, c->write_dataqueue.getBuf(), c->write_dataqueue.getPos(), 0);
 	if (result > 0)
-		c->write_dataqueue.pop(result);
+	  c->write_dataqueue.pop(result);
 	if (c->write_dataqueue.getPos() == 0)
 	{
 		printf("send data:%d\n", result);

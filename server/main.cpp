@@ -43,7 +43,6 @@ static struct event_base *main_base;
 static int last_thread = -1;
 WorkerThreads *workerThreads;
 
-static redisContext* redis_context;
 
 void thread_init(int nthreads)
 {

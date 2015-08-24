@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "DataQueue.h"
-#include "redishelp"
+#include "redishelp.h"
 
 typedef struct
 {
@@ -21,6 +21,11 @@ typedef struct
 	RedisHelp redisHelp;
 } conn;
 
+typedef struct
+{
+	int fd;
+} user_data;
+
 void conn_init();
 void do_read(const int fd, const short which, void *arg);
 void do_write(const int fd, const short which, void *arg);
@@ -31,4 +36,5 @@ conn* conn_new(const int sfd, enum conn_states init_state, const int event_flags
 
 bool process_data(DataQueue *dq, conn *c);
 void parse_package(const char *buff, size_t len, conn *c);
+void cleanconn(conn *c);
 #endif
