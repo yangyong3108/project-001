@@ -14,7 +14,6 @@
 #include <time.h>
 #include <errno.h>
 #include "json/json.h"
-#include <map>
 
 using namespace google::protobuf::io;
 using namespace google::protobuf;
@@ -25,7 +24,7 @@ static int freecurr;
 static int freetotal;
 static conn **freeconns;
 
-static map<int, user_data*> s_userdata;
+extern Global G;
 
 void conn_init()
 {
@@ -50,13 +49,11 @@ conn* conn_new(const int sfd, enum conn_states init_state, const int event_flags
 		}
 	}	
 
-	c->redisHelp.connect();
-
 	//int nCurCount(0);
 	//if (c->redisHelp.addServerCounter(nCurCount))
 	//  printf("cur count:%d\n", nCurCount);
 
-	c->nUserId = 0;
+	//c->nUserId = 0;
 	c->bAuth = false;
 
 	c->sfd = sfd;
@@ -164,11 +161,11 @@ void conn_free(conn *c)
 void cleanconn(conn *c)
 {
 	c->redisHelp.disconnect();
-	map<int, user_data*>::iterator it = s_userdata.find(c->nUserId);
-	if (it != s_userdata.end())
+	map<string, user_data*>::iterator it = G.m_userdata.find(c->strUserId);
+	if (it != G.m_userdata.end())
 	{
 		delete it->second;
-		s_userdata.erase(it);
+		G.m_userdata.erase(it);
 	}
 	printf("client close\n");
 	event_del(&c->read_event);
@@ -279,10 +276,12 @@ void parse_package(const char *buff, size_t len, conn *c)
 							{
 
 								c->bAuth = true;
-								c->nUserId = r[0][0].as<int>();
+								c->strUserId = r[0][0].c_str();
 								user_data *pUserData = new user_data;
 								pUserData->fd = c->sfd;
-								s_userdata.insert(map<int, user_data*>::value_type(c->nUserId, pUserData));
+								c->redisHelp.connect();
+
+								G.m_userdata.insert(map<string, user_data*>::value_type(c->strUserId, pUserData));
 								//msg.set_data(&rsp, rsp.ByteSize());
 								printf("auth success ready send data\n");								
 								ProtobufResponseData prData;

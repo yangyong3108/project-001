@@ -15,16 +15,11 @@ typedef struct
 	struct event write_event;
 	short ev_flags;
 	bool bAuth;
-	int nUserId;
+	string strUserId;
 	DataQueue read_dataqueue;
 	DataQueue write_dataqueue;
 	RedisHelp redisHelp;
 } conn;
-
-typedef struct
-{
-	int fd;
-} user_data;
 
 void conn_init();
 void do_read(const int fd, const short which, void *arg);

@@ -3,6 +3,10 @@
 
 #include <pqxx/pqxx>
 #include <hiredis/hiredis.h>
+#include <map>
+
+#define USERID_LENGTH	6
+#define TABLE_CAPACITY	12
 
 template<class T = char>
 class autoptr
@@ -42,6 +46,37 @@ public:
 	~rediscontextguard() { redisFree(m_context); }
 private:
 	redisContext *m_context;
+};
+
+class replyguard
+{
+public:
+	rediscontextguard(redisReply *reply) : m_reply(reply){}
+	~rediscontextguard() 
+	{ 
+		if (m_reply != NULL)
+			freeReplyObject(m_reply); 
+	}
+private:
+	redisReply* m_reply;
+};
+
+typedef struct
+{
+	int fd;
+} user_data;
+
+class Global
+{
+public:
+	Global(void);
+	~Global(void);
+
+public:
+	int		m_nTableCount;
+	map<string, user_data*> m_userdata;
+
+
 };
 
 #endif

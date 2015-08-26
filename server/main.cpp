@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include "WorkerThreads.h"
 #include "global.h"
+#include "redishelp.h"
 
 using namespace std;
 //#include "WorkerThreads.h"
@@ -81,6 +82,8 @@ void do_accept(evutil_socket_t listener, short event, void *arg)
 
 int main(int argc, char **argv)
 {
+	RedisHelp::initGame();
+
 	settings.num_threads = 10;
 	int c;
 	while (-1 != (c = getopt(argc, argv, "t:")))

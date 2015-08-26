@@ -11,8 +11,11 @@ public:
 	bool addServerCounter(int &nCount);
 	bool connect();
 	void disconnect();
+	bool getTablePlayers(const int& nTableIndex, vector<string> &vctPlayer);
+	bool insertPlayerToTable(const int& nTableIndex, const string& strPlayerId);
 
-	static bool initGameTable();
+	static bool initGame();
+
 
 private:
 	redisContext *m_context;
