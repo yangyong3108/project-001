@@ -4,6 +4,9 @@
 #include <pqxx/pqxx>
 #include <hiredis/hiredis.h>
 #include <map>
+#include <string.h>
+
+using namespace std;
 
 #define USERID_LENGTH	6
 #define TABLE_CAPACITY	12
@@ -51,14 +54,29 @@ private:
 class replyguard
 {
 public:
-	rediscontextguard(redisReply *reply) : m_reply(reply){}
-	~rediscontextguard() 
+	replyguard(redisReply *reply) : m_reply(reply){}
+	~replyguard() 
 	{ 
 		if (m_reply != NULL)
 			freeReplyObject(m_reply); 
 	}
 private:
 	redisReply* m_reply;
+};
+
+class mutexguard
+{
+public:
+	mutexguard(pthread_mutex_t *pMutex)
+		:m_pMutex(pMutex)
+	{}
+	~mutexguard()
+	{
+		pthread_mutex_unlock(m_pMutex);
+	}
+private:
+	pthread_mutex_t	*m_pMutex;
+
 };
 
 typedef struct

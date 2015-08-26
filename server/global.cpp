@@ -2,7 +2,7 @@
 
 Global G;
 
-Global::GlobalGlobal(void)
+Global::Global(void)
 	:m_nTableCount(5)
 {
 	

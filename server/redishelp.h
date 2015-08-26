@@ -1,6 +1,9 @@
 #ifndef __REDISHELP__
 #define __REDISHELP__
 #include <hiredis/hiredis.h>
+#include <vector>
+#include <string>
+using namespace std;
 
 class RedisHelp
 {
