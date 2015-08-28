@@ -16,6 +16,7 @@ public:
 	void disconnect();
 	bool getTablePlayers(const int& nTableIndex, vector<string> &vctPlayer);
 	bool insertPlayerToTable(const int& nTableIndex, const string& strPlayerId);
+	bool getTableInfo(ProtobufResponseData &tableInfo);
 
 	static bool initGame();
 

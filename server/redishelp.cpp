@@ -190,8 +190,16 @@ bool RedisHelp::insertPlayerToTable(const int& nTableIndex, const string& strPla
 	string strPlayers(reply->element[3]->str);
 	strPlayers.append(strPlayerId.c_str());
 
-	redisAppendCommand(m_context, "hset table:%d players %s", nTableIndex, strPlayers.c_str());
-	redisAppendCommand(m_context, "hincrby table:%d size 1", nTableIndex);
+	if (REDIS_OK != redisAppendCommand(m_context, "hset table:%d players %s", nTableIndex, strPlayers.c_str()))
+	{
+		printf("ERROR:cann't add command to redis\n");
+		return false
+	}
+	if (redisAppendCommand(m_context, "hincrby table:%d size 1", nTableIndex))
+	{
+		printf("ERROR:cann't add command to redis\n");
+		return false
+	}
 
 	redisReply *replyTemp(NULL);
 	if (REDIS_OK != redisGetReply(m_context, (void**)&replyTemp))
@@ -215,4 +223,10 @@ bool RedisHelp::insertPlayerToTable(const int& nTableIndex, const string& strPla
 
 
 	return true;
+}
+
+
+bool RedisHelp::getTableInfo(ProtobufResponseData &tableInfo)
+{
+
 }

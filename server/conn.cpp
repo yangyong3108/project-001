@@ -11,9 +11,11 @@
 #include "proto/logininfoprotos.pb.h"
 #include "proto/responseprotos.pb.h"
 #include "proto/protobufresponse.pb.h"
+#include "proto/requestprotocol.pb.h"
 #include <time.h>
 #include <errno.h>
 #include "json/json.h"
+#include "NetMessageNo.h"
 
 using namespace google::protobuf::io;
 using namespace google::protobuf;
@@ -263,7 +265,7 @@ void parse_package(const char *buff, size_t len, conn *c)
 							LoginInfo loginInfo;
 							if (!loginInfo.ParseFromString(msg.data()))
 							{
-								printf("parse logininfo error!\n");
+								perror("parse logininfo error!\n");
 								return;
 							}
 							string strSql("select userid, username from t_user where username='");
@@ -410,7 +412,27 @@ void parse_package(const char *buff, size_t len, conn *c)
 							}
 
 						}
-						break;
+						break;  // end Login
+					case POST:
+						{
+							Request req;
+							if (!req.ParseFromString(msg.data()))
+							{
+								perror("parse post data error!\n");
+								return;
+							}
+							case (req.msgid)
+							{
+								default:
+									break;
+								case MSG_TABLESINFO:
+									{
+										
+									}
+									break;
+							}
+						}
+						break; // end post
 				}
 			}
 			break;
